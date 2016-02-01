@@ -1,5 +1,33 @@
 <?php
 
+
+$connection = @mysql_connect("localhost", "root", "root");
+mysql_select_db("ab2016_quiz", $connection);
+mysql_set_charset("utf8", $connection);
+
+$questionsQuery = mysql_query("SELECT * FROM questions");
+
+$questions = [];
+
+while($question = mysql_fetch_assoc($questionsQuery)){
+
+	$questionOptionsQuery = mysql_query("SELECT * FROM options WHERE question_id = ". $question['id']);
+
+	$questionOptions = [];
+
+	while($optionRow = mysql_fetch_assoc($questionOptionsQuery)){
+		$questionOptions[$optionRow['id']] = $optionRow['option_text'];
+	}
+
+	$questions[] = [
+		"question" => $question['question'],
+		"options" => $questionOptions,
+		"answer" => $question['answer_id']
+	];
+}
+
+
+/*
 $questions = [
 	[
 		"question" => "Cumhuriyet ne zaman ilan edildi?",
@@ -8,6 +36,16 @@ $questions = [
 			"b" => "1922",
 			"c" => "1923",
 			"d" => "1924",
+		],
+		"answer" => "c"
+	],
+	[
+		"question" => "Türkiye'nin başkenti neresidir?",
+		"options" => [
+			"a" => "Bursa",
+			"b" => "İstanbul",
+			"c" => "Ankara",
+			"d" => "Adana",
 		],
 		"answer" => "c"
 	],
@@ -22,14 +60,5 @@ $questions = [
 		],
 		"answer" => "b"
 	],
-	[
-		"question" => "Türkiye'nin başkenti neresidir?",
-		"options" => [
-			"a" => "Bursa",
-			"b" => "İstanbul",
-			"c" => "Ankara",
-			"d" => "Adana",
-		],
-		"answer" => "c"
-	],
 ];
+*/
